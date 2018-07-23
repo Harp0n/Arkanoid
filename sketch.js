@@ -13,7 +13,7 @@ function setup() {
 // sequence and after the last line is read, the first 
 // line is executed again.
 function draw() { 
-  background(0);   // Set the background to black
+  background(128);   // Set the background to black
   y = y - 1; 
   if (y < 0) { 
     y = height; 
