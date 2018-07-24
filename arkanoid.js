@@ -97,14 +97,18 @@ function ArkanoidGame() {
 
     //rysuj bloki
 	this.drawBricks = function() {
-
-		rect(this.brick.x, this.brick.y, this.brick.width,this.brick.height,this.brick.lifes)
+		for (var i = 0; i < this.bricks.vert_num; i++) {
+			for (var j = 0; j < this.bricks.hor_num; j++) {
+				print(bricks[i][j]);
+				rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
+			}
+		}
 	}
 
     //rysuj wszystko
 	this.draw = function() {
-		drawBall();
-		drawBricks();
+		this.drawBall();
+		this.drawBricks();
 	}
 
 	this.update = function() {
@@ -165,6 +169,5 @@ function setup() {
 
 function draw() {
 	background(200);
-	game.drawBall();
-	game.drawBricks();
+	game.draw();
 }
