@@ -146,6 +146,8 @@ function ArkanoidGame() {
 
     //walidacja zeby nie wychodzilo za ekran
 	this.setPaddlePos = function(x) {
+		if (this.gamePaused || this.gameWin || this.gameOver) return;
+		this.paddle.x =  constrain(x, 0, width - this.paddle.width);
 	}
 
     
