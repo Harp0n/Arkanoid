@@ -50,7 +50,7 @@ function ArkanoidGame() {
 	var PADDLE_WIDTH = 60;
 	var PADDLE_HEIGHT = 10;
 	var PADDLE_SPEED = 1;
-	var BALL_RADIUS = 3;
+	var BALL_RADIUS = 20;
 	var BALL_DEFAULT_SPEED = 3;
 	var BALL_MAX_SPEED = 6;
 	var BRICK_WIDTH = 80;
@@ -62,7 +62,7 @@ function ArkanoidGame() {
 	this.lifes = 3;
 	this.score = 0;
 	this.paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - 20, PADDLE_WIDTH, PADDLE_HEIGHT);
-	this.ball = new Ball(width / 2, height / 2, BALL_RADIUS, BALL_DEFAULT_SPEED);
+	this.ball = new Ball(width / 2, height / 2, 0, 1, BALL_RADIUS, BALL_DEFAULT_SPEED);
 	this.gameOver = false;
 	this.gameWin = false;
 	this.gamePaused = false;
