@@ -68,6 +68,7 @@ function Bricks(hor_num, vert_num, brick_width, brick_height) {
 function ArkanoidGame() {
 
 
+	this.timescale = 0.4;
 	var PADDLE_WIDTH = 60;
 	var PADDLE_HEIGHT = 10;
 	var PADDLE_SPEED = 1;
@@ -83,7 +84,7 @@ function ArkanoidGame() {
 	this.lifes = 3;
 	this.score = 0;
 	this.paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - 20, PADDLE_WIDTH, PADDLE_HEIGHT);
-	this.ball = new Ball(width / 2, height / 2, 0, 1, BALL_RADIUS, BALL_DEFAULT_SPEED);
+	this.ball = new Ball(width / 2, height / 2, 0, -5, BALL_RADIUS, BALL_DEFAULT_SPEED);
 	this.gameOver = false;
 	this.gameWin = false;
 	this.gamePaused = false;
@@ -126,10 +127,11 @@ function ArkanoidGame() {
 	}
 
 	this.update = function() {
-		if (this.gamePaused || this.gameWin || this.gameOver) return;
+		// if (this.gamePaused || this.gameWin || this.gameOver) return;
 
 		// update ball pos (velocity)
-
+		this.ball.x += this.ball.dx * this.timescale;
+		this.ball.y += this.ball.dy * this.timescale;
 		// ball bounce from paddle
 
 		// ball bounce from walls (with losing health from bottom)
@@ -185,5 +187,6 @@ function setup() {
 
 function draw() {
 	background(200);
+	game.update();
 	game.draw();
 }
