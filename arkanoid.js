@@ -38,13 +38,14 @@ function Brick(x, y, width, height, type) {
 
 //zapelnij tablice blokami
 function Bricks(hor_num, vert_num, brick_width, brick_height) {
-	this.bricks = new Array();
+	var bricks = new Array();
 	for (var i = 0; i < vert_num; i++) {
-		this.bricks[i] = new Array();
+		bricks[i] = new Array();
 		for (var j = 0; j < hor_num; j++) {
-			this.bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.DEFAULT);
+			bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.DEFAULT);
 		}
 	}
+	return bricks;
 }
 
 //-----------------------------------------------------------------------------------------------------------
@@ -97,9 +98,8 @@ function ArkanoidGame() {
 
     //rysuj bloki
 	this.drawBricks = function() {
-		for (var i = 0; i < this.bricks.vert_num; i++) {
-			for (var j = 0; j < this.bricks.hor_num; j++) {
-				print(bricks[i][j]);
+		for (var i = 0; i < this.bricks.length; i++) {
+			for (var j = 0; j < this.bricks[i].length; j++) {
 				rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
 			}
 		}
