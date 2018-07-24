@@ -1,7 +1,17 @@
 function Paddle(x, y, width, height) {
+    this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
 };
 
-function Ball(x, y, radius, speed) {
+function Ball(x, y, dx, dy, radius, speed) {
+    this.x = x;
+    this.y = y;
+    this.dx = dx;
+    this.dy = dy;
+	this.radius = radius;
+	this.speed = speed;
 }
 
 var BricksTypes = {
@@ -14,7 +24,11 @@ var BricksTypes = {
 };
 
 function Brick(x, y, width, height, type) {
-    this.lifes = type;
+    this.x = x;
+	this.y = y;
+	this.width = width;
+	this.height = height;
+	this.lifes = type;
     
     //czy punkt x y jest w danym bloku
     this.isPointInRect = function(x, y) {
