@@ -70,7 +70,7 @@ function ArkanoidGame() {
 
 	var PADDLE_WIDTH = 60;
 	var PADDLE_HEIGHT = 10;
-	var PADDLE_SPEED = 1;
+	var PADDLE_SPEED = 3;
 	var BALL_RADIUS = 20;
 	var BALL_DEFAULT_SPEED = 3;
 	var BALL_MAX_SPEED = 6;
@@ -105,6 +105,10 @@ function ArkanoidGame() {
 		}
 	}
 
+	this.drawPaddle = function(){
+		rect(this.paddle.x, this.paddle.y, this.paddle.width, this.paddle.height);
+	}
+
     //rysuj kulke
 	this.drawBall = function() {
 		ellipse(this.ball.x, this.ball.y,this.ball.radius, this.ball.radius);
@@ -121,6 +125,7 @@ function ArkanoidGame() {
 
     //rysuj wszystko
 	this.draw = function() {
+		this.drawPaddle();
 		this.drawBall();
 		this.drawBricks();
 	}
@@ -152,10 +157,12 @@ function ArkanoidGame() {
 
     //wiadomo
 	this.movePaddleLeft = function() {
+		this.paddle.x -= PADDLE_SPEED;
 	}
 
     //wiadomo
 	this.movePaddleRight = function() {
+		this.paddle.x += PADDLE_SPEED;
 	}
 
     //walidacja zeby nie wychodzilo za ekran
@@ -186,4 +193,11 @@ function setup() {
 function draw() {
 	background(200);
 	game.draw();
+	
+if (keyIsDown(RIGHT_ARROW)) {
+    game.movePaddleRight();
+}
+if (keyIsDown(LEFT_ARROW)) {
+    game.movePaddleLeft();
+}
 }
