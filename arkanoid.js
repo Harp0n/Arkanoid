@@ -188,8 +188,6 @@ function setup() {
 	fill(255);
 	frameRate(30);
 	game = new ArkanoidGame();
-	print(game.ball);
-	print(game.bricks);
 }
 
 function draw() {
@@ -197,10 +195,11 @@ function draw() {
 	game.update();
 	game.draw();
 	
-if (keyIsDown(RIGHT_ARROW)) {
-    game.movePaddleRight();
-}
-if (keyIsDown(LEFT_ARROW)) {
-    game.movePaddleLeft();
-}
+	if (keyIsDown(RIGHT_ARROW)) {
+		game.movePaddleRight();
+	}
+	if (keyIsDown(LEFT_ARROW)) {
+		game.movePaddleLeft();
+	}
+	game.setPaddlePos(game.paddle.x);
 }
