@@ -58,7 +58,7 @@ function ArkanoidGame() {
 	var BRICK_SCORE = 100;
 	var width = 400, height = 720;
 
-	this.level = 0;
+	this.level = 1;
 	this.lifes = 3;
 	this.score = 0;
 	this.paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - 20, PADDLE_WIDTH, PADDLE_HEIGHT);
@@ -91,6 +91,8 @@ function ArkanoidGame() {
 
     //rysuj bloki
 	this.drawBricks = function() {
+
+		rect(this.brick.x, this.brick.y, this.brick.width,this.brick.height,this.brick.lifes)
 	}
 
     //rysuj wszystko
@@ -152,9 +154,11 @@ function setup() {
 	frameRate(30);
 	game = new ArkanoidGame();
 	print(game.ball);
+	print(game.brick);
 }
 
 function draw() {
 	background(200);
 	game.drawBall();
+	game.drawBricks();
 }
