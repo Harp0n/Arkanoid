@@ -44,7 +44,7 @@ function Bricks(hor_num, vert_num, brick_width, brick_height) {
 //-----------------------------------------------------------------------------------------------------------
 // Arkanoid Game class
 //-----------------------------------------------------------------------------------------------------------
-var game = function ArkanoidGame() {
+function ArkanoidGame() {
 
 
 	var PADDLE_WIDTH = 60;
@@ -86,7 +86,7 @@ var game = function ArkanoidGame() {
 
     //rysuj kulke
 	this.drawBall = function() {
-		ellipse(ball.x, ball.y,ball.radius, ball.radius);
+		ellipse(this.ball.x, this.ball.y,this.ball.radius, this.ball.radius);
 	}
 
     //rysuj bloki
@@ -144,11 +144,14 @@ var game = function ArkanoidGame() {
 
 //STEROWANIE
 
+var game;
 
 function setup() {
 	createCanvas(400, 720);
 	fill(255);
 	frameRate(30);
+	game = new ArkanoidGame();
+	print(game.ball);
 }
 
 function draw() {
