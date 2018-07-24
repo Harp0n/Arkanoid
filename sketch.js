@@ -1,22 +1,44 @@
-var y = 100;
+var CSX =400, CSY=720;	//rozmiar canvas
+class Tile {
+	constructor(x, y, h, w){
+		this.x = x;	//wspolrzedna x
+		this.y = y;	//wspolrzedna y
+		this.h = h;	//wysokosc
+		this.w = w;	//szeroskosc
+	}
+	//narysuj obiekt
+	dObj(){
+		rect(this.x, this.y, this.w, this.h);
+	}
+}
+var Player = new Tile(CSX/2, CSY/2, 10, 30);
+var tiles = [];	
 
-// The statements in the setup() function 
-// execute once when the program begins
 function setup() {
-	// createCanvas must be the first statement
-  createCanvas(400, 720);  
-  stroke(255);     // Set line drawing color to white
+  createCanvas(CSX, CSY);  
+  stroke(0);
+  var tempX = 50, tempY = 100;
+  for(var i=1; i<16; i++){
+	tiles[i]=new Tile(tempX, tempY, 10, 30);
+	tempX+=50;
+	if(i%5==0){
+		tempX=50;
+		tempY+=50;
+	}
+  }  
+
   frameRate(30);
 }
-// The statements in draw() are executed until the 
-// program is stopped. Each statement is executed in 
-// sequence and after the last line is read, the first 
-// line is executed again.
+
+
 function draw() { 
-  background(0);   // Set the background to black
-  y = y - 1; 
-  if (y < 0) { 
-    y = height; 
-  } 
-  line(0, y, width, y);  
+	clear();
+	background(200); 
+
+	for(var i=1; i<tiles.length; i++){
+		tiles[i].dObj();
+	}   
+	Player.dObj();  
 } 
+
+
