@@ -1,18 +1,20 @@
-function Paddle(x, y, width, height) {
+function Paddle(x, y, width, height, color) {
     this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
+	this.color = color;
 };
 
 
-function Ball(x, y, dx, dy, radius, speed) {
+function Ball(x, y, dx, dy, radius, speed, color) {
     this.x = x;
     this.y = y;
     this.dx = dx;
     this.dy = dy;
 	this.radius = radius;
 	this.speed = speed;
+	this.color = color;
 }
 
 var BricksTypes = {
@@ -24,12 +26,38 @@ var BricksTypes = {
 	STEEL : 5
 };
 
+var BrickColors = {
+	DEFAULT : "#70a1ff",
+	ICE : "#70a1ff",
+	WOOD : "#F79F1F",
+	STONE : "#dcdde1",
+	IRON : "#95afc0",
+	STEEL : "#535c68"
+};
+
+
 function Brick(x, y, width, height, type) {
     this.x = x;
 	this.y = y;
 	this.width = width;
 	this.height = height;
 	this.lifes = type;
+	this.color; 
+	switch(this.lifes)
+	{
+		case 1: this.color=BrickColors.ICE;
+			break;
+		case 2: this.color=BrickColors.WOOD;
+			break;
+		case 3: this.color=BrickColors.STONE;
+			break;
+		case 4: this.color=BrickColors.IRON;
+			break;
+		case 5: this.color=BrickColors.STEEL;
+			break;
+		default: this.color=BrickColors.ICE;
+			break;
+	};
     
     //czy punkt x y jest w danym bloku
     this.isPointInRect = function(x, y) {
@@ -56,6 +84,7 @@ function Bricks(hor_num, vert_num, brick_width, brick_height) {
 	for (var i = 0; i < vert_num; i++) {
 		bricks[i] = new Array();
 		for (var j = 0; j < hor_num; j++) {
+			var bcolor;
 			bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.DEFAULT);
 		}
 	}
@@ -75,6 +104,7 @@ function ArkanoidGame() {
 	var BALL_RADIUS = 5;
 	var BALL_DEFAULT_SPEED = 3;
 	var BALL_MAX_SPEED = 6;
+	var BALL_COLOR = "#f1f2f6";
 	var BRICK_WIDTH = 80;
 	var BRICK_HEIGHT = 35;
 	var BRICK_SCORE = 100;
@@ -83,8 +113,8 @@ function ArkanoidGame() {
 	this.level = 1;
 	this.lifes = 3;
 	this.score = 0;
-	this.paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - 20, PADDLE_WIDTH, PADDLE_HEIGHT);
-	this.ball = new Ball(width / 2, height / 2, 0, -5, BALL_RADIUS, BALL_DEFAULT_SPEED);
+	this.paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - 20, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
+	this.ball = new Ball(width / 2, height / 2, 0, -5, BALL_RADIUS, BALL_DEFAULT_SPEED, BALL_COLOR);
 	this.gameOver = false;
 	this.gameWin = false;
 	this.gamePaused = false;
@@ -107,11 +137,13 @@ function ArkanoidGame() {
 	}
 
 	this.drawPaddle = function(){
-		rect(this.paddle.x, this.paddle.y, this.paddle.width, this.paddle.height);
+		fill(this.paddle.color);
+		rect(this.paddle.x, this.paddle.y, this.paddle.width, this.paddle.height, 10);
 	}
 
     //rysuj kulke
 	this.drawBall = function() {
+		fill(this.ball.color);
 		ellipse(this.ball.x, this.ball.y,this.ball.radius, this.ball.radius);
 	}
 
@@ -119,14 +151,18 @@ function ArkanoidGame() {
 	this.drawBricks = function() {
 		for (var i = 0; i < this.bricks.length; i++) {
 			for (var j = 0; j < this.bricks[i].length; j++) {
+				fill(this.bricks[i][j].color);
 				if (this.bricks[i][j].lifes > 0)
-					rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
+					rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height, 5);
 			}
 		}
 	}
 
     //rysuj wszystko
 	this.draw = function() {
+		clear();
+		fill("#a4b0be");
+		background(200);
 		this.drawPaddle();
 		this.drawBall();
 		this.drawBricks();
@@ -200,16 +236,13 @@ var game;
 
 function setup() {
 	createCanvas(400, 720);
-	fill(255);
 	frameRate(30);
 	game = new ArkanoidGame();
 }
 
 function draw() {
-	background(200);
 	game.update();
 	game.draw();
-	
 	if (keyIsDown(RIGHT_ARROW)) {
 		game.movePaddleRight();
 	}
