@@ -33,6 +33,20 @@ function Brick(x, y, width, height, type) {
     
     //czy punkt x y jest w danym bloku
     this.isPointInRect = function(x, y) {
+		var xMin = this.x - this.width/2;
+		var xMax = this.x + this.width/2;
+
+		var yMin = this.y - this.height/2;
+		var yMax = this.y + this.height/2;
+
+		if(x<=xMax && x>=xMin)
+		{
+			if(y<=yMax && y>=yMin)
+			{
+				return true;
+			}
+		}
+		return false;
 	}
 }
 
