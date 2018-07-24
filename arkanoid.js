@@ -101,6 +101,7 @@ function ArkanoidGame() {
 	var PADDLE_WIDTH = 60;
 	var PADDLE_HEIGHT = 10;
 	var PADDLE_SPEED = 3;
+	var PADDLE_COLOR = "#e67e22";
 	var BALL_RADIUS = 5;
 	var BALL_DEFAULT_SPEED = 3;
 	var BALL_MAX_SPEED = 6;
