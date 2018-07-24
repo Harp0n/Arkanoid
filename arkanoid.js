@@ -5,6 +5,7 @@ function Paddle(x, y, width, height) {
 	this.height = height;
 };
 
+
 function Ball(x, y, dx, dy, radius, speed) {
     this.x = x;
     this.y = y;
@@ -43,9 +44,9 @@ function Bricks(hor_num, vert_num, brick_width, brick_height) {
 //-----------------------------------------------------------------------------------------------------------
 // Arkanoid Game class
 //-----------------------------------------------------------------------------------------------------------
-function ArkanoidGame() {
+var game = function ArkanoidGame() {
 
-/*  takie zmienne byly, ale nie musza byc
+
 	var PADDLE_WIDTH = 60;
 	var PADDLE_HEIGHT = 10;
 	var PADDLE_SPEED = 1;
@@ -55,6 +56,7 @@ function ArkanoidGame() {
 	var BRICK_WIDTH = 80;
 	var BRICK_HEIGHT = 35;
 	var BRICK_SCORE = 100;
+	var width = 400, height = 720;
 
 	this.level = 0;
 	this.lifes = 3;
@@ -64,7 +66,7 @@ function ArkanoidGame() {
 	this.gameOver = false;
 	this.gameWin = false;
 	this.gamePaused = false;
-	this.bricks = new Bricks(8, 2, BRICK_WIDTH, BRICK_HEIGHT); */
+	this.bricks = new Bricks(8, 2, BRICK_WIDTH, BRICK_HEIGHT); 
 
 	this.init = function() {
 /* 		this.level = 0;
@@ -84,6 +86,7 @@ function ArkanoidGame() {
 
     //rysuj kulke
 	this.drawBall = function() {
+		ellipse(ball.x, ball.y,ball.radius, ball.radius);
 	}
 
     //rysuj bloki
@@ -92,6 +95,8 @@ function ArkanoidGame() {
 
     //rysuj wszystko
 	this.draw = function() {
+		drawBall();
+		drawBricks();
 	}
 
 	this.update = function() {
@@ -139,11 +144,14 @@ function ArkanoidGame() {
 
 //STEROWANIE
 
-var game;
+
 function setup() {
-    game = ArkanoidGame();
+	createCanvas(400, 720);
+	fill(255);
+	frameRate(30);
 }
 
 function draw() {
-    game.draw();
+	background(200);
+	game.drawBall();
 }
