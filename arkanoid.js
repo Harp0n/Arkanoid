@@ -39,6 +39,12 @@ function Brick(x, y, width, height, type) {
 //zapelnij tablice blokami
 function Bricks(hor_num, vert_num, brick_width, brick_height) {
 	this.bricks = new Array();
+	for (var i = 0; i < vert_num; i++) {
+		this.bricks[i] = new Array();
+		for (var j = 0; j < hor_num; j++) {
+			this.bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.DEFAULT);
+		}
+	}
 }
 
 //-----------------------------------------------------------------------------------------------------------
@@ -154,7 +160,7 @@ function setup() {
 	frameRate(30);
 	game = new ArkanoidGame();
 	print(game.ball);
-	print(game.brick);
+	print(game.bricks);
 }
 
 function draw() {
