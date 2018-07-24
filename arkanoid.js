@@ -68,11 +68,11 @@ function Bricks(hor_num, vert_num, brick_width, brick_height) {
 function ArkanoidGame() {
 
 
-	this.timescale = 0.4;
+	this.timescale = 1.8;
 	var PADDLE_WIDTH = 60;
 	var PADDLE_HEIGHT = 10;
 	var PADDLE_SPEED = 3;
-	var BALL_RADIUS = 20;
+	var BALL_RADIUS = 5;
 	var BALL_DEFAULT_SPEED = 3;
 	var BALL_MAX_SPEED = 6;
 	var BRICK_WIDTH = 80;
@@ -119,7 +119,8 @@ function ArkanoidGame() {
 	this.drawBricks = function() {
 		for (var i = 0; i < this.bricks.length; i++) {
 			for (var j = 0; j < this.bricks[i].length; j++) {
-				rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
+				if (this.bricks[i][j].lifes > 0)
+					rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
 			}
 		}
 	}
@@ -138,11 +139,25 @@ function ArkanoidGame() {
 		this.ball.x += this.ball.dx * this.timescale;
 		this.ball.y += this.ball.dy * this.timescale;
 		// ball bounce from paddle
+		if(this.ball.y >= this.paddle.y && this.ball.x >= this.paddle.x && this.ball.x <= this.paddle.x+this.paddle.width){
+			this.ball.dy = -this.ball.dy;
+		}
 
 		// ball bounce from walls (with losing health from bottom)
 
 		// ball bounce from bricks
-
+		for (var i = 0; i < this.bricks.length; i++) {
+			for (var j = 0; j < this.bricks[i].length; j++) {
+				if (this.bricks[i][j].lifes > 0){
+					//czy uderza w dolna scianke
+					if(this.bricks[i][j].isPointInRect(this.ball.x, this.ball.y + this.ball.dy * this.timescale)){
+						this.ball.dy = -this.ball.dy;
+						this.bricks[i][j].lifes-=1;
+					}
+				}
+				// rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
+			}
+		}
         //sprawdz czy koniec lvla, jesli takl to zacznij nowy lvl albo skoncz gre
 	}
 
