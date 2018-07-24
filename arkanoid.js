@@ -43,21 +43,24 @@ function Brick(x, y, width, height, type) {
 	this.height = height;
 	this.lifes = type;
 	this.color; 
-	switch(this.lifes)
-	{
-		case 1: this.color=BrickColors.ICE;
-			break;
-		case 2: this.color=BrickColors.WOOD;
-			break;
-		case 3: this.color=BrickColors.STONE;
-			break;
-		case 4: this.color=BrickColors.IRON;
-			break;
-		case 5: this.color=BrickColors.STEEL;
-			break;
-		default: this.color=BrickColors.ICE;
-			break;
+	this.UpdateColor = function(){
+		switch(this.lifes)
+		{
+			case 1: this.color=BrickColors.ICE;
+				break;
+			case 2: this.color=BrickColors.WOOD;
+				break;
+			case 3: this.color=BrickColors.STONE;
+				break;
+			case 4: this.color=BrickColors.IRON;
+				break;
+			case 5: this.color=BrickColors.STEEL;
+				break;
+			default: this.color=BrickColors.ICE;
+				break;
+		};
 	};
+	
     
     //czy punkt x y jest w danym bloku
     this.isPointInRect = function(x, y) {
@@ -84,8 +87,8 @@ function Bricks(hor_num, vert_num, brick_width, brick_height) {
 	for (var i = 0; i < vert_num; i++) {
 		bricks[i] = new Array();
 		for (var j = 0; j < hor_num; j++) {
-			var bcolor;
-			bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.DEFAULT);
+			bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.WOOD);
+			bricks[i][j].UpdateColor();
 		}
 	}
 	return bricks;
@@ -190,6 +193,7 @@ function ArkanoidGame() {
 					if(this.bricks[i][j].isPointInRect(this.ball.x, this.ball.y + this.ball.dy * this.timescale)){
 						this.ball.dy = -this.ball.dy;
 						this.bricks[i][j].lifes-=1;
+						this.bricks[i][j].UpdateColor();
 					}
 				}
 				// rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
@@ -237,7 +241,7 @@ var game;
 
 function setup() {
 	createCanvas(400, 720);
-	frameRate(30);
+	frameRate(60);
 	game = new ArkanoidGame();
 }
 
