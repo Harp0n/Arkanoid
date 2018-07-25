@@ -388,6 +388,24 @@ function ArkanoidGame() {
 		this.initLevel(this.level);
 	}
 
+	function drawButton() {
+		background(237, 34, 93);
+		fill(0);
+	  
+		if (mouseIsPressed) {
+		  if (mouseButton === LEFT) {
+			ellipse(50, 50, 50, 50);
+		  }
+		  if (mouseButton === RIGHT) {
+			rect(25, 25, 50, 50);
+		  }
+		  if (mouseButton === CENTER) {
+			triangle(23, 75, 50, 20, 78, 75);
+		  }
+		}
+	  
+		print(mouseButton);
+	  }
 };
 
 //STEROWANIE
@@ -397,6 +415,7 @@ var game;
 function setup() {
 	createCanvas(400, 500);
 	frameRate(60);
+
 	game = new ArkanoidGame();
 	game.startGame();
 }
@@ -411,6 +430,7 @@ function keyPressed() {
 function draw() {
 	game.update();
 	game.draw();
+	game.drawButton();
 	if (keyIsDown(RIGHT_ARROW)) {
 		game.movePaddleRight();
 	}
