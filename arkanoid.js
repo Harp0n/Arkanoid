@@ -264,6 +264,7 @@ function ArkanoidGame() {
 		&& this.ball.x >= this.paddle.x && this.ball.x <= this.paddle.x +  this.paddle.width){
 			this.ball.dy = -this.ball.dy;
 			var deltax = this.paddle.x + this.paddle.width/2 - this.ball.x;
+			this.ball.y = this.paddle.y;
 			this.ball.dx -= deltax * 0.02 * BALL_DEFAULT_SPEED;
 		}
 
