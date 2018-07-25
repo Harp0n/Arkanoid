@@ -122,7 +122,7 @@ function ArkanoidGame() {
 	this.timescale = 1.8;
 	var PADDLE_WIDTH = 60;
 	var PADDLE_HEIGHT = 10;
-	var PADDLE_SPEED = 6;
+	var PADDLE_SPEED = 5;
 	var PADDLE_COLOR = "#e67e22";
 	var BALL_RADIUS = 5;
 	var BALL_DEFAULT_SPEED = 3;
@@ -131,6 +131,8 @@ function ArkanoidGame() {
 	var BRICK_WIDTH = 40;
 	var BRICK_HEIGHT = 15;
 	var BRICK_SCORE = 100;
+	var TICKS = 20;
+	BALL_DEFAULT_SPEED/=TICKS;
 	var width = 400, height = 500;
 
 	//wymiary 10x30 maks (z aktualnymi ustawieniami :) )
@@ -158,55 +160,48 @@ function ArkanoidGame() {
 				"3255233233",
 				"1322333331",
 				"1111111111"],
-		test : ["1111111111",
-				"1111111111",
-				"1111111111",
-				"1111111111",
-				"1111111111",
-				"1111111111",
-				"1111111111",
-				"1111111111",
-				"1111111111",
-				"1111111111",
-				"0000000000"],
+		test : ["0000000000",
+				"0000000000",
+				"0000000000",
+				"0000000000",
+				"0000000000",
+				"0000000000",
+				"0000000000",
+				"0000000000",
+				"0000000000",
+				"0000000000",
+				"0000010000"],
 	};
 
-	this.level = 0;
+	this.level = 1;
 	this.lives = 3;
 	this.score = 0;
 	this.paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - 20, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
-	this.ball = new Ball(width /2, height -200, 0, -5, BALL_RADIUS, BALL_DEFAULT_SPEED, BALL_COLOR);
+	
+	this.ball = new Ball(width /2, height -200, 0, -1, BALL_RADIUS, BALL_DEFAULT_SPEED, BALL_COLOR);
 	this.gameOver = false;
 	this.gameWin = false;
 	this.gamePaused = false;
 	this.bricks;
-	this.init = function() {
-/* 		this.level = 0;
-		this.lives = 3;
-		this.score = 0;
-		this.gameOver = false;
-		this.gameWin = false;
-		this.gamePaused = false;
-		this.initLevel(this.level); */
-	}
 
     //dodaj bloki, ustaw im zycia
 	this.initLevel = function(level) {
 		var lvl;
 		switch (level) {
-			case 1: lvl = this.Levels.first;break;
 			case 0: lvl = this.Levels.test;break;
+			case 1: lvl = this.Levels.first;break;
 			default: lvl = this.Levels.kutas;break;
 		}
 		this.bricks = new Bricks(10, lvl.length, BRICK_WIDTH, BRICK_HEIGHT, lvl);
 		this.ball.x = width /2;
 		this.ball.y = height -200;
-		this.ball.dx = 0;
-		this.ball.dy = -5;
+		this.ball.dx = 2*(random()-0.5)*0.1;
+		this.ball.dy = -1;
 
 		this.paddle.x = width / 2 - PADDLE_WIDTH / 2;
 		this.gameOver = false;
 		this.gameWin = false;
+		this.gamePaused = false;
 	}
 
 	this.drawPaddle = function(){
@@ -237,28 +232,35 @@ function ArkanoidGame() {
 		fill("#a4b0be");
 		background(200);
 		this.drawPaddle();
-		this.drawBall();
 		this.drawBricks();
+		this.drawBall();
 	}
 
 	this.update = function() {
+		for(var k = 0; k<TICKS;k++){
 		if (this.gamePaused || this.gameWin || this.gameOver) return;
-		print(this.ball.x, this.ball.y);
+
 		// update ball pos (velocity)
-			//clamp velocities
-			if(abs(this.ball.dx)<0.002){
-				this.ball.dx = (random()-0.5)*0.003
+			// clamp velocities
+			if(abs(this.ball.dx)<0.001){
+				this.ball.dx = 2*(random()-0.5) * 0.001
+			}
+			if(abs(this.ball.dy)<0.001){
+				this.ball.dy = 2*(random()-0.5) * 0.001
 			}
 			var temp = sqrt(sq(this.ball.dx)+sq(this.ball.dy));
 			this.ball.dx = this.ball.dx * this.ball.speed/temp;
 			this.ball.dy = this.ball.dy * this.ball.speed/temp;
 		this.ball.x += this.ball.dx * this.timescale;
 		this.ball.y += this.ball.dy * this.timescale;
+
+
 		// ball bounce from paddle
-		if(this.ball.y >= this.paddle.y && this.ball.x >= this.paddle.x && this.ball.x <= this.paddle.x+this.paddle.width){
+		if(this.ball.y >= this.paddle.y && this.ball.y <= this.paddle.y + this.paddle.height 
+		&& this.ball.x >= this.paddle.x && this.ball.x <= this.paddle.x +  this.paddle.width){
 			this.ball.dy = -this.ball.dy;
 			var deltax = this.paddle.x + this.paddle.width/2 - this.ball.x;
-			this.ball.dx -= deltax * 0.05;
+			this.ball.dx -= deltax * 0.02 * BALL_DEFAULT_SPEED;
 		}
 
 		// ball bounce from walls (with losing health from bottom)
@@ -275,26 +277,55 @@ function ArkanoidGame() {
 		for (var i = 0; i < this.bricks.length; i++) {
 			for (var j = 0; j < this.bricks[i].length; j++) {
 				if (this.bricks[i][j].lives > 0){
-					//czy uderza w dolna scianke
-					if(this.bricks[i][j].isPointInRect(this.ball.x, this.ball.y + this.ball.dy * this.timescale)){
-						this.ball.dy = -this.ball.dy;
-						this.bricks[i][j].lives-=1;
-						this.bricks[i][j].UpdateColor();
+					if(this.bricks[i][j].isPointInRect(this.ball.x, this.ball.y)){
+						var delta = createVector(this.ball.x,this.ball.y).sub(
+							this.bricks[i][j].x+this.bricks[i][j].width/2,
+							this.bricks[i][j].y+this.bricks[i][j].height/2);
+						delta.x *= BRICK_HEIGHT/BRICK_WIDTH;
+						print(delta);
+						if(abs(delta.x) > abs(delta.y))
+						{
+							if((-this.ball.dx > 0 &&  delta.x > 0)||(-this.ball.dx < 0 &&  delta.x < 0))
+							{
+								this.ball.dx = -this.ball.dx;
+								this.bricks[i][j].lives-=1;
+								this.bricks[i][j].UpdateColor();
+
+							}
+						}
+						else
+						{
+							if((-this.ball.dy > 0 &&  delta.y > 0)||(-this.ball.dy < 0 &&  delta.y < 0))
+							{
+								this.ball.dy = -this.ball.dy;
+								this.bricks[i][j].lives-=1;
+								this.bricks[i][j].UpdateColor();
+							}
+						}
 					}
 				}
-				// rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
 			}
 		}
 		//sprawdz czy koniec lvla, jesli takl to zacznij nowy lvl albo skoncz gre
 		this.checkGameState();
+		}
 	}
 
 	this.checkGameState = function(){
 		if(this.isBallOnScreen()==false) {
+			this.lives--;
+			if(this.lives>0){
+				this.initLevel(this.level);
+			}
+			else{
 			this.gameOver = true;
 			this.startGame();
+			}
 		}
-		if(this.areAnyBricksLeft() == false) this.gameWin = true;
+		if(this.areAnyBricksLeft() == false) {
+			this.level++;
+			this.initLevel(this.level);
+		}
 	}
 	//czy nie wyszla za dolna krawedz == przegrana
 	this.isBallOnScreen = function()
@@ -325,12 +356,12 @@ function ArkanoidGame() {
 
     //wiadomo
 	this.movePaddleLeft = function() {
-		this.paddle.x -= PADDLE_SPEED;
+		game.setPaddlePos(this.paddle.x - PADDLE_SPEED);
 	}
 
     //wiadomo
 	this.movePaddleRight = function() {
-		this.paddle.x += PADDLE_SPEED;
+		game.setPaddlePos(this.paddle.x + PADDLE_SPEED);
 	}
 
     //walidacja zeby nie wychodzilo za ekran
@@ -342,6 +373,9 @@ function ArkanoidGame() {
     
     //setup predkosci pileczki
 	this.startGame = function() {
+		this.level = 0;
+		this.lives = 3;
+		this.score = 0;
 		this.initLevel(this.level);
 	}
 };
@@ -357,8 +391,14 @@ function setup() {
 	game.startGame();
 }
 
+function keyPressed() {
+	if(keyCode === 27){
+		print("pauza")
+		game.togglePause();
+	}
+}
+
 function draw() {
-	game.update();
 	game.update();
 	game.draw();
 	if (keyIsDown(RIGHT_ARROW)) {
@@ -367,5 +407,4 @@ function draw() {
 	if (keyIsDown(LEFT_ARROW)) {
 		game.movePaddleLeft();
 	}
-	game.setPaddlePos(game.paddle.x);
 }
