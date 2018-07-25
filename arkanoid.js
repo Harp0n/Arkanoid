@@ -387,6 +387,7 @@ function ArkanoidGame() {
 		this.score = 0;
 		this.initLevel(this.level);
 	}
+
 };
 
 //STEROWANIE
@@ -401,9 +402,9 @@ function setup() {
 }
 
 function keyPressed() {
-	if(keyCode === 27){
-		print("pauza")
+	if(keyCode === 32){
 		game.togglePause();
+		
 	}
 }
 
@@ -416,4 +417,12 @@ function draw() {
 	if (keyIsDown(LEFT_ARROW)) {
 		game.movePaddleLeft();
 	}
+	if(game.gamePaused){
+		textAlign(CENTER);
+		textStyle(BOLD);
+		fill(0);
+		textSize(40);
+		
+        text("Pause", 200, 400);
+    }
 }
