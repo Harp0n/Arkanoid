@@ -264,8 +264,8 @@ function ArkanoidGame() {
 		&& this.ball.x >= this.paddle.x && this.ball.x <= this.paddle.x +  this.paddle.width){
 			this.ball.dy = -this.ball.dy;
 			var deltax = this.paddle.x + this.paddle.width/2 - this.ball.x;
-			this.ball.y = this.paddle.y;
-			this.ball.dx -= deltax * 0.02 * BALL_DEFAULT_SPEED;
+			this.ball.dy = -2;
+			this.ball.dx = -deltax  * BALL_DEFAULT_SPEED;
 		}
 
 		// ball bounce from walls (with losing health from bottom)
