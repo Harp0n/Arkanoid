@@ -41,10 +41,10 @@ function Brick(x, y, width, height, type) {
 	this.y = y;
 	this.width = width;
 	this.height = height;
-	this.lifes = type;
+	this.lives = type;
 	this.color; 
 	this.UpdateColor = function(){
-		switch(this.lifes)
+		switch(this.lives)
 		{
 			case 1: this.color=BrickColors.ICE;
 				break;
@@ -87,7 +87,7 @@ function Bricks(hor_num, vert_num, brick_width, brick_height) {
 	for (var i = 0; i < vert_num; i++) {
 		bricks[i] = new Array();
 		for (var j = 0; j < hor_num; j++) {
-			bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.WOOD);
+			bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.STEEL);
 			bricks[i][j].UpdateColor();
 		}
 	}
@@ -115,7 +115,7 @@ function ArkanoidGame() {
 	var width = 400, height = 720;
 
 	this.level = 1;
-	this.lifes = 3;
+	this.lives = 3;
 	this.score = 0;
 	this.paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - 20, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
 	this.ball = new Ball(width / 2, height / 2, 0, -5, BALL_RADIUS, BALL_DEFAULT_SPEED, BALL_COLOR);
@@ -126,7 +126,7 @@ function ArkanoidGame() {
 
 	this.init = function() {
 /* 		this.level = 0;
-		this.lifes = 3;
+		this.lives = 3;
 		this.score = 0;
 		this.gameOver = false;
 		this.gameWin = false;
@@ -156,7 +156,7 @@ function ArkanoidGame() {
 		for (var i = 0; i < this.bricks.length; i++) {
 			for (var j = 0; j < this.bricks[i].length; j++) {
 				fill(this.bricks[i][j].color);
-				if (this.bricks[i][j].lifes > 0)
+				if (this.bricks[i][j].lives > 0)
 					rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height, 5);
 			}
 		}
@@ -173,7 +173,7 @@ function ArkanoidGame() {
 	}
 
 	this.update = function() {
-		// if (this.gamePaused || this.gameWin || this.gameOver) return;
+		if (this.gamePaused || this.gameWin || this.gameOver) return;
 
 		// update ball pos (velocity)
 		this.ball.x += this.ball.dx * this.timescale;
@@ -188,21 +188,42 @@ function ArkanoidGame() {
 		// ball bounce from bricks
 		for (var i = 0; i < this.bricks.length; i++) {
 			for (var j = 0; j < this.bricks[i].length; j++) {
-				if (this.bricks[i][j].lifes > 0){
+				if (this.bricks[i][j].lives > 0){
 					//czy uderza w dolna scianke
 					if(this.bricks[i][j].isPointInRect(this.ball.x, this.ball.y + this.ball.dy * this.timescale)){
 						this.ball.dy = -this.ball.dy;
-						this.bricks[i][j].lifes-=1;
+						this.bricks[i][j].lives-=1;
 						this.bricks[i][j].UpdateColor();
 					}
 				}
 				// rect(this.bricks[i][j].x, this.bricks[i][j].y, this.bricks[i][j].width,this.bricks[i][j].height);
 			}
 		}
-        //sprawdz czy koniec lvla, jesli takl to zacznij nowy lvl albo skoncz gre
+		//sprawdz czy koniec lvla, jesli takl to zacznij nowy lvl albo skoncz gre
+		this.checkGameState();
 	}
 
+	this.checkGameState = function(){
+		if(this.isBallOnScreen()==false) this.gameOver = true;
+		if(this.areAnyBricksLeft() == false) this.gameWin = true;
+	}
+	//czy nie wyszla za dolna krawedz == przegrana
+	this.isBallOnScreen = function()
+	{
+		if(this.ball.y >= height)return false;
+		return true;
+	}
 
+	//jak nie ma klockow to poziom ukonczony
+	this.areAnyBricksLeft = function()
+	{
+		for (var i = 0; i < this.bricks.length; i++) {
+			for (var j = 0; j < this.bricks[i].length; j++) {
+				if(this.bricks[i][j].lives>0)return true;
+			}
+		}
+		return false;
+	}
 
 
     // czy w bloku this.bricks[i,j] jest kulka 
