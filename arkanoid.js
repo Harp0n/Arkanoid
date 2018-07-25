@@ -18,6 +18,7 @@ function Ball(x, y, dx, dy, radius, speed, color) {
 }
 
 var BricksTypes = {
+	EMPTY : 0,
 	DEFAULT : 1,
 	ICE : 1,
 	WOOD : 2,
@@ -82,15 +83,33 @@ function Brick(x, y, width, height, type) {
 }
 
 //zapelnij tablice blokami
-function Bricks(hor_num, vert_num, brick_width, brick_height) {
+function Bricks(hor_num, vert_num, brick_width, brick_height, level) {
+	this.lvlInterpreter = function(x, y){
+		var inp = "0";
+		if(level[y][x]!=undefined)inp= level[y][x];
+		//print(level[x][y]);
+
+		var out;
+		switch(inp){
+			case "0":out=BricksTypes.EMPTY;break;
+			case "1":out=BricksTypes.ICE;break;
+			case "2":out=BricksTypes.WOOD;break;
+			case "3":out=BricksTypes.STONE;break;
+			case "4":out=BricksTypes.IRON;break;
+			case "5":out=BricksTypes.STEEL;break;
+			default: out=BricksTypes.DEFAULT;break;
+		}
+		return out;
+	}
 	var bricks = new Array();
 	for (var i = 0; i < vert_num; i++) {
 		bricks[i] = new Array();
 		for (var j = 0; j < hor_num; j++) {
-			bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, BricksTypes.STEEL);
+			bricks[i][j] = new Brick(j * brick_width, i * brick_height, brick_width, brick_height, this.lvlInterpreter(j,i));
 			bricks[i][j].UpdateColor();
 		}
 	}
+	
 	return bricks;
 }
 
@@ -109,21 +128,47 @@ function ArkanoidGame() {
 	var BALL_DEFAULT_SPEED = 3;
 	var BALL_MAX_SPEED = 6;
 	var BALL_COLOR = "#f1f2f6";
-	var BRICK_WIDTH = 80;
-	var BRICK_HEIGHT = 35;
+	var BRICK_WIDTH = 40;
+	var BRICK_HEIGHT = 15;
 	var BRICK_SCORE = 100;
 	var width = 400, height = 720;
+
+	//wymiary 10x30 maks (z aktualnymi ustawieniami :) )
+	this.Levels =
+	{
+		first : ["5555555555",
+				"5555555555",
+				"4444444444",
+				"4444444444",
+				"3333333333",
+				"3333333333",
+				"2222222222",
+				"2222222222",
+				"1111111111",
+				"1111111111",
+				"0000000000"],
+		kutas : ["3223333333",
+				"2552333233",
+				"2555222523",
+				"5445555552",
+				"5444444445",
+				"5444444445",
+				"5445555552",
+				"2545222523",
+				"3255233233",
+				"1322333331",
+				"1111111111"],
+	};
 
 	this.level = 1;
 	this.lives = 3;
 	this.score = 0;
 	this.paddle = new Paddle(width / 2 - PADDLE_WIDTH / 2, height - 20, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_COLOR);
-	this.ball = new Ball(width / 2, height / 2, 0, -5, BALL_RADIUS, BALL_DEFAULT_SPEED, BALL_COLOR);
+	this.ball = new Ball(width /2, height -200, 0, -5, BALL_RADIUS, BALL_DEFAULT_SPEED, BALL_COLOR);
 	this.gameOver = false;
 	this.gameWin = false;
 	this.gamePaused = false;
-	this.bricks = new Bricks(8, 2, BRICK_WIDTH, BRICK_HEIGHT); 
-
+	this.bricks;
 	this.init = function() {
 /* 		this.level = 0;
 		this.lives = 3;
@@ -136,8 +181,13 @@ function ArkanoidGame() {
 
     //dodaj bloki, ustaw im zycia
 	this.initLevel = function(level) {
+		var lvl;
 		switch (level) {
+			case 1: lvl = this.Levels.first;break;
+			default: lvl = this.Levels.kutas;break;
 		}
+		this.bricks = new Bricks(10, lvl.length, BRICK_WIDTH, BRICK_HEIGHT, lvl); 
+
 	}
 
 	this.drawPaddle = function(){
@@ -253,6 +303,7 @@ function ArkanoidGame() {
     
     //setup predkosci pileczki
 	this.startGame = function() {
+		this.initLevel(this.level);
 	}
 };
 
@@ -264,6 +315,7 @@ function setup() {
 	createCanvas(400, 720);
 	frameRate(60);
 	game = new ArkanoidGame();
+	game.startGame();
 }
 
 function draw() {
