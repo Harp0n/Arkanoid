@@ -240,17 +240,21 @@ function ArkanoidGame() {
 		for(var k = 0; k<TICKS;k++){
 		if (this.gamePaused || this.gameWin || this.gameOver) return;
 
-		// update ball pos (velocity)
-			// clamp velocities
-			if(abs(this.ball.dx)<0.001){
-				this.ball.dx = 2*(random()-0.5) * 0.001
-			}
-			if(abs(this.ball.dy)<0.001){
-				this.ball.dy = 2*(random()-0.5) * 0.001
-			}
-			var temp = sqrt(sq(this.ball.dx)+sq(this.ball.dy));
-			this.ball.dx = this.ball.dx * this.ball.speed/temp;
-			this.ball.dy = this.ball.dy * this.ball.speed/temp;
+		
+		//kulka nie powinna leciec idealnie pionowo ani poziomo
+		if(abs(this.ball.dx)<0.001){
+			this.ball.dx = 2*(random()-0.5) * 0.001
+		}
+		if(abs(this.ball.dy)<0.001){
+			this.ball.dy = 2*(random()-0.5) * 0.001
+		}
+
+		// normalizacja predkosci
+
+		var temp = sqrt(sq(this.ball.dx)+sq(this.ball.dy));
+		this.ball.dx = this.ball.dx * this.ball.speed/temp;
+		this.ball.dy = this.ball.dy * this.ball.speed/temp;
+		// update ball pos (velocity)	
 		this.ball.x += this.ball.dx * this.timescale;
 		this.ball.y += this.ball.dy * this.timescale;
 
@@ -274,8 +278,11 @@ function ArkanoidGame() {
 		}
 
 		// ball bounce from bricks
+		var bounced = false;
 		for (var i = 0; i < this.bricks.length; i++) {
+			if(bounced) break;
 			for (var j = 0; j < this.bricks[i].length; j++) {
+				if(bounced) break;
 				if (this.bricks[i][j].lives > 0){
 					if(this.bricks[i][j].isPointInRect(this.ball.x, this.ball.y)){
 						var delta = createVector(this.ball.x,this.ball.y).sub(
@@ -290,7 +297,7 @@ function ArkanoidGame() {
 								this.ball.dx = -this.ball.dx;
 								this.bricks[i][j].lives-=1;
 								this.bricks[i][j].UpdateColor();
-
+								bounced = true;
 							}
 						}
 						else
@@ -300,6 +307,7 @@ function ArkanoidGame() {
 								this.ball.dy = -this.ball.dy;
 								this.bricks[i][j].lives-=1;
 								this.bricks[i][j].UpdateColor();
+								bounced = true;
 							}
 						}
 					}
