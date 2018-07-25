@@ -133,6 +133,7 @@ function ArkanoidGame() {
 	var BRICK_SCORE = 100;
 	var TICKS = 20;
 	BALL_DEFAULT_SPEED/=TICKS;
+	TICKS *= 15; //ile razy pyrzyspiesz gre dla ai
 	var width = 400, height = 500;
 
 	//wymiary 10x30 maks (z aktualnymi ustawieniami :) )
@@ -257,6 +258,9 @@ function ArkanoidGame() {
 		// update ball pos (velocity)	
 		this.ball.x += this.ball.dx * this.timescale;
 		this.ball.y += this.ball.dy * this.timescale;
+		
+		var target_x = this.ball.x - this.paddle.width/2;
+		game.setPaddlePos(target_x);
 
 
 		// ball bounce from paddle
