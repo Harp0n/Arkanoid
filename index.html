@@ -1,28 +1,20 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <title>Arkanoid</title>
     <meta charset="utf-8">
     <meta name="viewport" width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0>
-    <style> body {padding: 0; margin: 0;} </style>
-   <style>
-    .button {
-    background-color: blue;
-    border: none;
-    color: white;
-    padding: 15px 25px;
-    text-align: center;
-    font-size: 16px;
-    cursor: pointer;
-}
-      
-      </style>
-
-  </head>
+    <link rel="stylesheet" href="arkanoid.css" type="text/css">
+    <script src="p5/p5.min.js"></script>
+    <script src="p5/addons/p5.dom.min.js"></script>
+    <script src="p5/addons/p5.sound.min.js"></script>
+    <script src="arkanoid.js"></script>
+    
+    </head>
   <body>
-      <button class="button", onclick="arkanoid.js">Start playing!</button>
-      <script src="p5/p5.min.js"></script>
-      <script src="p5/addons/p5.dom.min.js"></script>
-      <script src="p5/addons/p5.sound.min.js"></script>
-      <script src="arkanoid.js"></script>
+    <div id="game">
+           
+    </div>
+    
   </body>
 </html>

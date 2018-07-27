@@ -124,7 +124,7 @@ function ArkanoidGame() {
 	var PADDLE_HEIGHT = 10;
 	var PADDLE_SPEED = 5;
 	var PADDLE_COLOR = "#e67e22";
-	var BALL_RADIUS = 5;
+	var BALL_RADIUS = 20;
 	var BALL_DEFAULT_SPEED = 3;
 	var BALL_MAX_SPEED = 6;
 	var BALL_COLOR = "#f1f2f6";
@@ -231,9 +231,12 @@ function ArkanoidGame() {
 		clear();
 		fill("#a4b0be");
 		background(200);
+		if(this.gameMenu===true)
+		{
 		this.drawPaddle();
 		this.drawBricks();
 		this.drawBall();
+		}
 	}
 
 	this.update = function() {
@@ -379,6 +382,14 @@ function ArkanoidGame() {
 		this.paddle.x =  constrain(x, 0, width - this.paddle.width);
 	}
 
+	this.gameMenu = function(){
+		if(this.keyPressed===true)
+		{
+			this.gamePaused=this.gamePaused;
+			return true;
+		}
+	}
+
     
     //setup predkosci pileczki
 	this.startGame = function() {
@@ -388,24 +399,6 @@ function ArkanoidGame() {
 		this.initLevel(this.level);
 	}
 
-	function drawButton() {
-		background(237, 34, 93);
-		fill(0);
-	  
-		if (mouseIsPressed) {
-		  if (mouseButton === LEFT) {
-			ellipse(50, 50, 50, 50);
-		  }
-		  if (mouseButton === RIGHT) {
-			rect(25, 25, 50, 50);
-		  }
-		  if (mouseButton === CENTER) {
-			triangle(23, 75, 50, 20, 78, 75);
-		  }
-		}
-	  
-		print(mouseButton);
-	  }
 };
 
 //STEROWANIE
@@ -425,12 +418,15 @@ function keyPressed() {
 		game.togglePause();
 		
 	}
+	if(keyCode === 13)
+	{
+		game.gameMenu();
+	}
 }
 
 function draw() {
 	game.update();
 	game.draw();
-	game.drawButton();
 	if (keyIsDown(RIGHT_ARROW)) {
 		game.movePaddleRight();
 	}
@@ -444,5 +440,13 @@ function draw() {
 		textSize(40);
 		
         text("Pause", 200, 400);
-    }
+	}
+	if(game.gameMenu)
+	{
+		textAlign(CENTER);
+		textStyle(BOLD);
+		fill(0);
+		textSize(20);
+		text("Wciśnij spacje żeby grać!",200,200 )
+	}
 }
